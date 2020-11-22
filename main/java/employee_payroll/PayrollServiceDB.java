@@ -8,9 +8,11 @@ import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Map;
 
 public class PayrollServiceDB {
 	private static PayrollServiceDB employeePayrollServiceDB;
@@ -137,7 +139,8 @@ public class PayrollServiceDB {
 		}
 	}
 
-	public List<EmployeePayrollData> getEmployeePayrollDataByStartingDate(LocalDate startDate, LocalDate endDate) throws EmployeePayrollException {
+	public List<EmployeePayrollData> getEmployeePayrollDataByStartingDate(LocalDate startDate, LocalDate endDate)
+			throws EmployeePayrollException {
 		String sql = String.format(
 				"SELECT * FROM employee_payroll WHERE start BETWEEN cast('%s' as date) and cast('%s' as date);",
 				startDate.toString(), endDate.toString());
@@ -148,5 +151,22 @@ public class PayrollServiceDB {
 		} catch (SQLException e) {
 			throw new EmployeePayrollException("Connection Failed.");
 		}
+	}
+
+	public Map<String, Double> performAverageAndMinAndMaxOperations(String column, String operation)
+			throws EmployeePayrollException {
+		// TODO Auto-generated method stub
+		String sql = String.format("SELECT gender,%s(%s) FROM employee_payroll GROUP BY gender;" , operation , column);
+		Map<String, Double> mapValues = new HashMap<>();
+		try (Connection connection = this.getConnection()) {
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				mapValues.put(resultSet.getString(1), resultSet.getDouble(2));
+			}
+		} catch (SQLException e) {
+			throw new EmployeePayrollException("Connection Failed.");
+		}
+		return mapValues;
 	}
 }
