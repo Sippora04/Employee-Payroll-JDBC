@@ -6,7 +6,7 @@ public class EmployeePayrollData {
 
 	private int id;
 	private String name;
-	private String gender;
+	String gender;
 	private double salary;
 	private LocalDate startDate;
 
@@ -36,6 +36,14 @@ public class EmployeePayrollData {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 
 	public double getSalary() {

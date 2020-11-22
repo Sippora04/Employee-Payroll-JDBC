@@ -52,4 +52,9 @@ public class EmployeePayrollService {
 		employeePayrollList.add(payrollServiceDB.addEmployeeToPayroll(name, gender, salary, startDate));
 
 	}
+
+	public void addingEmployeeToPayroll(String name, String gender, double salary, LocalDate startDate)
+			throws EmployeePayrollException {
+		employeePayrollList.add(payrollServiceDB.addEmployeeToPayroll(name, gender, salary, startDate));
+	}
 }
