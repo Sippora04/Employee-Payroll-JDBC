@@ -61,5 +61,14 @@ public class EmployeePayrollServiceTest {
 		Map<String, Double> maxSalaryByGender = employeePayrollService.performOperationByGender("salary", "MAX");
 		Assert.assertEquals(3000000.0, maxSalaryByGender.get("F"), 0.0);
 	}
+	//UC7
+	 @Test
+	    public void givenNewEmployee_WhenAdded_ShouldSyncWithDB() throws EmployeePayrollException {
+	    	EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+	    	employeePayrollService.readEmployeePayrollData();
+	    	employeePayrollService.addEmployeeToPayroll("Mark","M", 5000000.00, LocalDate.now());
+	        boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB("Mark");
+	        Assert.assertTrue(result);
+	    }
 	
 }
