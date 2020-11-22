@@ -56,9 +56,8 @@ public class EmployeePayrollData {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null || getClass() != obj.getClass())
-			return false;
-		EmployeePayrollData that = (EmployeePayrollData) obj;
+		if (obj==null|| getClass() !=obj.getClass()) return false;
+		EmployeePayrollData that =(EmployeePayrollData) obj;
 		if (id != that.id)
 			return false;
 		if (name == null) {
@@ -78,7 +77,6 @@ public class EmployeePayrollData {
 
 	@Override
 	public String toString() {
-		return "EmployeePayrollData [id=" + id + ", name=" + name + ", salary=" + salary + ", startDate=" + startDate
-				+ "]";
+		return "EmployeePayrollData [id=" + id + ", name=" + name + ", salary=" + salary + ", startDate=" + startDate + "]";
 	}
 }
