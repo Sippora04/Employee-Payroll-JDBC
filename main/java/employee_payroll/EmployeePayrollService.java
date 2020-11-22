@@ -71,4 +71,10 @@ public class EmployeePayrollService {
 		return PayrollServiceDB.getInstance().addNewEmployee(id, name, gender, phone_no, address, date, salary,
 				comp_name, comp_id, department, dept_id);
 	}
+
+	public void deleteEmployee(String name) throws EmployeePayrollException {
+		if (!this.checkEmployeePayrollInSyncWithDB(name))
+			throw new EmployeePayrollException("Employee has not present");
+		PayrollServiceDB.getInstance().deleteEmployee(name);
+	}
 }

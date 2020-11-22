@@ -20,6 +20,7 @@ public class PayrollServiceDB {
 	private PreparedStatement preparedStatementForUpdation;
 	private PreparedStatement employeePayrollDataStatement;
 	private int rowAffected;
+
 	public PayrollServiceDB() {
 	}
 
@@ -264,21 +265,71 @@ public class PayrollServiceDB {
 			throws EmployeePayrollException {
 		int employeeId = 0;
 		EmployeePayrollData employeePayrollData = null;
-		String sql = String.format("insert into employee values (%s,%s,'%s','%s')", id, name, gender, date);
 		Connection connection = null;
 		try {
 			connection = this.getConnection();
 			connection.setAutoCommit(false);
+			Statement statement = connection.createStatement();
+			List<EmployeePayrollData> list = this.readData();
+			boolean toInsert = true;
+			for (EmployeePayrollData e : list) {
+				if (e.getId() == comp_id) {
+					toInsert = false;
+					break;
+				}
+			}
+			if (toInsert) {
+				String sql_company = String.format("insert into company values (%s, '%s')", comp_id, comp_name);
+				statement.executeUpdate(sql_company);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		try {
+			Statement statement = connection.createStatement();
+			List<EmployeePayrollData> list = this.readData();
+			Integer[] dept;
+			List<Integer> dept_idList = new ArrayList<>();
+			if (list != null) {
+				String sql = "SELECT * FROM department";
+				ResultSet resultSet = statement.executeQuery(sql);
+				while (resultSet.next()) {
+					Integer d_id = resultSet.getInt("dept_id");
+					dept_idList.add(d_id);
+				}
+				dept = dept_idList.toArray(new Integer[0]);
+			}
+			for (int index = 0; index < dept_id.length; index++) {
+				boolean toInsert = true;
+				for (Integer dep : dept_idList) {
+					if (dept_id[index] == dep) {
+						toInsert = false;
+						break;
+					}
+				}
+				if (toInsert == true) {
+					Statement statement_d = connection.createStatement();
+					String sql_department = String.format("INSERT INTO department values (%s,'%s')", dept_id[index],
+							department[index]);
+					statement_d.executeUpdate(sql_department);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		try {
 			Statement statement_employee = connection.createStatement();
+			String sql = String.format("INSERT INTO employee values (%s,%s,'%s','%s'", id, name, gender, date);
 			int rowAffected = statement_employee.executeUpdate(sql, statement_employee.RETURN_GENERATED_KEYS);
 		} catch (SQLException e) {
 			try {
 				connection.rollback();
 			} catch (SQLException e1) {
-				throw new EmployeePayrollException("Insertion error");
+				throw new EmployeePayrollException("Insertion error in employee");
 			}
 			return employeePayrollData;
 		}
+
 		double deductions = salary * 0.2;
 		double taxable_pay = salary - deductions;
 		double tax = taxable_pay * 0.1;
@@ -291,28 +342,21 @@ public class PayrollServiceDB {
 			if (rowAffected == 1) {
 				ResultSet resultSet = statement_salary.getGeneratedKeys();
 				if (resultSet.next())
-					employeeId = resultSet.getInt(2);
+					employeeId = resultSet.getInt(1);
 				employeePayrollData = new EmployeePayrollData(employeeId, name, salary);
 			}
 		} catch (SQLException e) {
 			try {
 				connection.rollback();
 			} catch (SQLException e1) {
-				throw new EmployeePayrollException("Insertion error");
+				throw new EmployeePayrollException("Insertion error in payroll");
 			}
 		}
 		try {
 			Statement statement = connection.createStatement();
-			String sql_company = String.format("insert into company values (%s, '%s')", comp_id, comp_name);
-			statement.executeUpdate(sql_company);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		try {
-			Statement statement = connection.createStatement();
 			for (int i = 0; i < dept_id.length; i++) {
-				String sql_new = String.format("insert into department values (%s,%s)", id, dept_id[i]);
-				statement.executeUpdate(sql_new);
+				String sql_emp_department = String.format("INSERT INTO department values (%s,%s)", id, dept_id[i]);
+				statement.executeUpdate(sql_emp_department);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -331,9 +375,20 @@ public class PayrollServiceDB {
 				try {
 					connection.close();
 				} catch (SQLException e) {
-					throw new EmployeePayrollException("Connection not closed");
+					throw new EmployeePayrollException("Connection not able to close");
 				}
 		}
 		return employeePayrollData;
+	}
+
+	public void deleteEmployee(String name) throws EmployeePayrollException {
+		// TODO Auto-generated method stub
+		String sql = String.format("DELETE FROM employee WHERE name=%s", name);
+		Connection connection = this.getConnection();
+		try {
+			Statement statement = connection.createStatement();
+			statement.execute(sql);
+		} catch (SQLException e) {
+		}
 	}
 }

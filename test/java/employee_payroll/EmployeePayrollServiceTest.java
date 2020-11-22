@@ -98,4 +98,13 @@ public class EmployeePayrollServiceTest {
 		boolean results = employeePayrollService.checkEmployeePayrollInSyncWithDB("Sippora");
 		Assert.assertTrue(results);
 	}
+
+	// UC12
+	@Test
+	public void givenNameWhenDeletedShouldGetDeletedFromDatabase() throws EmployeePayrollException {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		employeePayrollService.deleteEmployee("Terisa");
+		boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB("Sippora");
+		Assert.assertFalse(result);
+	}
 }
