@@ -52,13 +52,14 @@ public class EmployeePayrollServiceTest {
 				endDate);
 		Assert.assertEquals(matchingRecords.get(0), employeePayrollService.getEmployeePayrollData("Bill"));
 	}
-
+	
 	// UC6
 	@Test
 	public void givenEmployee_PerformedVariousOperations_ShouldGiveResult() throws EmployeePayrollException {
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
 		employeePayrollService.readEmployeePayrollData();
-		Map<String, Double> averageSalaryByGender = employeePayrollService.performOperationByGender("salary", "MAX");
-		Assert.assertEquals(3000000.0, averageSalaryByGender.get("F"), 0.0);
+		Map<String, Double> maxSalaryByGender = employeePayrollService.performOperationByGender("salary", "MAX");
+		Assert.assertEquals(3000000.0, maxSalaryByGender.get("F"), 0.0);
 	}
+	
 }
