@@ -19,7 +19,7 @@ public class PayrollServiceDB {
 	private static PayrollServiceDB employeePayrollServiceDB;
 	private PreparedStatement preparedStatementForUpdation;
 	private PreparedStatement employeePayrollDataStatement;
-
+	private int rowAffected;
 	public PayrollServiceDB() {
 	}
 
