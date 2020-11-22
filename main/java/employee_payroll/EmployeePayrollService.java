@@ -49,13 +49,13 @@ public class EmployeePayrollService {
 		return this.payrollServiceDB.performAverageAndMinAndMaxOperations(column, operation);
 	}
 
-	public void addEmployeeToPayroll(String name, String gender, double salary, LocalDate startDate)
+	public void addingEmployeeToPayroll(String name, String gender, double salary, LocalDate startDate)
 			throws EmployeePayrollException {
 		employeePayrollList.add(payrollServiceDB.addEmployeeToPayroll(name, gender, salary, startDate));
 
 	}
 
-	public void addingEmployeeToPayroll(String name, String gender, double salary, LocalDate startDate)
+	public void addEmployeeToPayroll(String name, String gender, double salary, LocalDate startDate)
 			throws EmployeePayrollException {
 		employeePayrollList.add(payrollServiceDB.addEmployeeToPayroll(name, gender, salary, startDate));
 

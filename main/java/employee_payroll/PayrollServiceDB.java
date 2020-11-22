@@ -19,6 +19,7 @@ public class PayrollServiceDB {
 	private static PayrollServiceDB employeePayrollServiceDB;
 	private PreparedStatement preparedStatementForUpdation;
 	private PreparedStatement employeePayrollDataStatement;
+	private int rowAffected;
 
 	public PayrollServiceDB() {
 	}
@@ -264,12 +265,29 @@ public class PayrollServiceDB {
 			throws EmployeePayrollException {
 		int employeeId = 0;
 		EmployeePayrollData employeePayrollData = null;
-		String sql = String.format("insert into employee values (%s,%s,'%s','%s')", id, name, gender, date);
 		Connection connection = null;
 		try {
 			connection = this.getConnection();
 			connection.setAutoCommit(false);
+			Statement statement = connection.createStatement();
+			String sql_forcompany = String.format("INSERT INTO company values ('%s', '%s')", comp_id, comp_name);
+			statement.executeUpdate(sql_forcompany);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		try {
+			Statement statement = connection.createStatement();
+			for (int i = 0; i < dept_id.length; i++) {
+				String sql_department = String.format("INSERT INTO department values ('%s','%s')", dept_id[i],
+						department[i]);
+				statement.executeUpdate(sql_department);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		try {
 			Statement statement_employee = connection.createStatement();
+			String sql = String.format("INSERT INTO employee values ('%s','%s','%s','%s')");
 			int rowAffected = statement_employee.executeUpdate(sql, statement_employee.RETURN_GENERATED_KEYS);
 		} catch (SQLException e) {
 			try {
@@ -303,16 +321,10 @@ public class PayrollServiceDB {
 		}
 		try {
 			Statement statement = connection.createStatement();
-			String sql_company = String.format("insert into company values (%s, '%s')", comp_id, comp_name);
-			statement.executeUpdate(sql_company);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		try {
-			Statement statement = connection.createStatement();
 			for (int i = 0; i < dept_id.length; i++) {
-				String sql_new = String.format("insert into department values (%s,%s)", id, dept_id[i]);
-				statement.executeUpdate(sql_new);
+				String sql_emp_department = String.format("INSERT INTO Employee_Department values (%s,%s)", id,
+						dept_id[i]);
+				statement.executeUpdate(sql_emp_department);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

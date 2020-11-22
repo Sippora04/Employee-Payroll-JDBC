@@ -7,7 +7,7 @@ public class EmployeePayrollData {
 
 	private int id;
 	private String name;
-	private String gender;
+	String gender;
 	private double salary;
 	private LocalDate startDate;
 	private String company_name;
