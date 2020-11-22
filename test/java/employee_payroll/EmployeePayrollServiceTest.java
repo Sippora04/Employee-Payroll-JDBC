@@ -1,5 +1,6 @@
 package employee_payroll;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -74,11 +75,27 @@ public class EmployeePayrollServiceTest {
 
 	// UC8
 	@Test
-    public void addingNewEmployee_WhenAdded_ShouldSyncWithDB() throws EmployeePayrollException {
-    	EmployeePayrollService employeePayrollService = new EmployeePayrollService();
-    	employeePayrollService.readEmployeePayrollData();
-    	employeePayrollService.addEmployeeToPayroll("Mark","M", 5000000.00, LocalDate.now());
-        boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB("Mark");
-        Assert.assertTrue(result);
-    }
+	public void addingNewEmployee_WhenAdded_ShouldSyncWithDB() throws EmployeePayrollException {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		employeePayrollService.readEmployeePayrollData();
+		employeePayrollService.addEmployeeToPayroll("Mark", "M", 5000000.00, LocalDate.now());
+		boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB("Mark");
+		Assert.assertTrue(result);
+	}
+
+	// UC9
+	@Test
+	public void givennewEmployeeDetails_addItInEveryTableToCompleteERDiagram_ShouldGiveResult()
+			throws EmployeePayrollException {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		employeePayrollService.readEmployeePayrollData();
+		Date date = Date.valueOf("2020-11-19");
+		boolean result;
+		String[] departments = { "Marketing", "SalesAndBusiness" };
+		int[] dept_id = { 01, 02 };
+		EmployeePayrollData employeePayrollData = employeePayrollService.addNewEmployee(101, "Sippora", "F",
+				"9988100232", "Ranchi", date, 4000000, "JHK", 11, departments, dept_id);
+		boolean results = employeePayrollService.checkEmployeePayrollInSyncWithDB("Sippora");
+		Assert.assertTrue(results);
+	}
 }

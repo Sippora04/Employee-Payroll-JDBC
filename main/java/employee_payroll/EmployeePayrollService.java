@@ -1,6 +1,8 @@
 package employee_payroll;
 
+import java.sql.Date;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,5 +59,16 @@ public class EmployeePayrollService {
 			throws EmployeePayrollException {
 		employeePayrollList.add(payrollServiceDB.addEmployeeToPayroll(name, gender, salary, startDate));
 
+	}
+
+	public void addEmployeeToPayrollWithThreads(List<EmployeePayrollData> employeePayrollDataList) {
+		Map<Integer, Boolean> employeeAddditionStatus = new HashMap<>();
+	}
+
+	public EmployeePayrollData addNewEmployee(int id, String name, String gender, String phone_no, String address,
+			Date date, double salary, String comp_name, int comp_id, String[] department, int[] dept_id)
+			throws EmployeePayrollException {
+		return PayrollServiceDB.getInstance().addNewEmployee(id, name, gender, phone_no, address, date, salary,
+				comp_name, comp_id, department, dept_id);
 	}
 }
